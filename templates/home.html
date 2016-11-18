@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock title %}
+{% block content %}
+<!-- Search bar -->
+<form method="GET" action="">
+  <input type="search" name="q" placeholder="Search" value="{{ request.GET.q }}"/>
+  <input type="submit" value="search">
+</form>
+<!-- /Search bar -->
+<h1>{{ title }}</h1>
+<!-- ADD HERE NOTATION IF THERE ARE NO RESULT FOR THE SEARCH -->
+{% for post in post_list %}
+  <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+  <p>{{ post.content|truncatewords:20 }}</p>
+  <!-- Timestamp -->
+  {% if post.late_publish and post.late_publish > actual_datetime %}
+  	<!-- Stuff showing message -->
+    <p class="drafted-message">Post is in draft</p>
+    <!-- /Stuff showing message -->
+  	<small>{{ post.late_publish }}</small>
+  {% else %}
+  	<small>{{ post.timestamp }}</small>
+  {% endif %}
+  <!-- /Timestamp -->
+  {% if post.user.get_full_name %}
+    <p>Автор: {{ post.user.get_full_name }}</p>
+  {% endif %}
+{% endfor %}
+
+<!-- I add advanced pagination -->
+<!-- So search will be correct in all pages-->
+<div class="pagination">
+    <span class="step-links">
+        {% if post_list.has_previous %}
+            <a href="?page={{ post_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ post_list.number }} of {{ post_list.paginator.num_pages }}.
+        </span>
+		
+        {% if post_list.has_next %}
+            <a href="?page={{ post_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock content %}

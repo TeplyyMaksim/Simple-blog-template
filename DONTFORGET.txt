@@ -1,0 +1,8 @@
+REMEMBER:
+-Create DB in PostgreSQL
+-Add it in settings.py
+-makemigrations, migrate
+-createsuperuser
+-Create 2 folders in upper forlder from src:
+  -static cdn
+  -media cdn
